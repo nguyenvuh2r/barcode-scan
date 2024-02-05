@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+    <style>
+        #video-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        #barcode-result {
+            margin-top: 20px;
+        }
+    </style>
+	<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+</head>
+<body>
+    <div id="video-container">
+        <video id="barcode-scanner" playsinline></video>
+        <div id="barcode-result"></div>
+    </div>
+
+    <script language="javascript">
+		document.addEventListener("DOMContentLoaded", () => {
+    const video = document.getElementById("barcode-scanner");
+    const barcodeResult = document.getElementById("barcode-result");
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then((stream) => {
+            video.srcObject = stream;
+            const barcodeScanner = new Instascan.Scanner({ video });
+
+            barcodeScanner.addListener("scan", (content) => {
+                barcodeResult.innerHTML = `Barcode: ${content}`;
+            });
+
+            Instascan.Camera.getCameras()
+                .then((cameras) => {
+                    if (cameras.length > 0) {
+                        barcodeScanner.start(cameras[0]);
+                    } else {
+                        console.error("No cameras found.");
+                    }
+                })
+                .catch((error) => console.error(error));
+        })
+        .catch((error) => console.error(error));
+});
+	</script>
+</body>
+</html>
