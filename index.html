@@ -24,14 +24,15 @@
         <div id="barcode-result"></div>
     </div>
 
-    <script language="javascript">
+    <script>
 		document.addEventListener("DOMContentLoaded", () => {
     const video = document.getElementById("barcode-scanner");
     const barcodeResult = document.getElementById("barcode-result");
 
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
         .then((stream) => {
             video.srcObject = stream;
+
             const barcodeScanner = new Instascan.Scanner({ video });
 
             barcodeScanner.addListener("scan", (content) => {
